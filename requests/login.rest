@@ -4,6 +4,6 @@ Content-Type: application/json
 //KOVAUKKO SALASANA SALAISUUS
 
 {
-	"username": "kovaukko",
-	"password": "salaisuus"
+	"username": "rajuukko",
+	"password": "salainen"
 }

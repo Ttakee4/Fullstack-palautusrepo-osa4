@@ -1,11 +1,11 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhanV1a2tvIiwiaWQiOiI2NzYxYTY1NmFiZTllNzc1YzFjY2FkMWIiLCJpYXQiOjE3MzQ0NTQzNjN9._6pP--jVP2TsQZ9-zfEJKZcCDVLZj0ZkSgnlS1ceyGk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhanV1a2tvIiwiaWQiOiI2NzYxYzk4MTlhYmYxMDlkNWYyYWM4MzUiLCJpYXQiOjE3MzQ0NjUzNTd9.1GlpcgaVjAkxphaLKLzfsSBkI49peT9dkqnb2Z0MzAA
 
 {
-	"title": "Rajuja ruokapaikkoja",
+	"title": "testi",
 	"author": "Raju Ukko",
-	"url": "www.ruokaa.fi",
-	"userId": "6761a656abe9e775c1ccad1b",
-	"likes": 64
+	"url": "www.testi.fi",
+	"userId": "6761c9819abf109d5f2ac835",
+	"likes": 123
 }
