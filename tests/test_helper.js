@@ -27,11 +27,11 @@ const initialBlogs = [
 //   return note._id.toString()
 // }
 
-const notesInDb = async () => {
+const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
 }
 
 module.exports = {
-  initialBlogs, notesInDb
+  initialBlogs, blogsInDb
 }
