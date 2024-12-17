@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+//KOVAUKKO SALASANA SALAISUUS
+
+{
+	"username": "kovaukko",
+	"password": "salaisuus"
+}

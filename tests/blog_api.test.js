@@ -4,8 +4,12 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
+
 const helper = require('./test_helper')
+
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
@@ -26,50 +30,6 @@ describe('when there is initially some blogs saved', () => {
     assert.strictEqual(response.body.length, 2)
   })
 
-  /*
-	Ottaa blogit kuten aiemmin.
-	Object keys, niin saadaan avaimet arvon sijasta.
-	Otetaan indeksistä nolla, mutta testattu myös 1 (toimii siis molemmilla)
-	*/
-  test('identifying field name is id instead of the default _id', async () => {
-    const response = await api.get('/api/blogs')
-
-    const identifier = response.body
-    assert(Object.keys(identifier[0]).includes('id'))
-  })
-
-  /* Nämä täällä valmiina jos tarvitsee valita yksi tietty blogi
-  describe('viewing a specific blog', () => {
-    test('succeeds with a valid id', async () => {
-      const blogsAtStart = await helper.blogsInDb()
-
-      const blogToView = blogsAtStart[0]
-
-      const resultBlog = await api
-        .get(`/api/blogs/${blogToView.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-
-      assert.deepStrictEqual(resultBlog.body, blogToView)
-    })
-
-    test('fails with statuscode 404 if note does not exist', async () => {
-      const validNonexistingId = await helper.nonExistingId()
-
-      await api
-        .get(`/api/blogs/${validNonexistingId}`)
-        .expect(404)
-    })
-
-    test('fails with statuscode 400 id is invalid', async () => {
-      const invalidId = '5a3d5da59070081a82a3445'
-
-      await api
-        .get(`/api/blogs/${invalidId}`)
-        .expect(400)
-    })
-  })
-  */
   describe('addition of new blog', () => {
 
     test('succeeds with valid data', async() => {
@@ -213,6 +173,109 @@ describe('when there is initially some blogs saved', () => {
 
       const newLikes = blogsAtEnd.map(r => r.likes)
       assert(newLikes.includes(42))
+    })
+  })
+
+  describe('when there is initially one users saved', () => {
+    beforeEach(async () => {
+      await User.deleteMany({})
+
+      const passwordHash = await bcrypt.hash('sekret', 10)
+      const user = new User({ username: 'root', passwordHash })
+
+      await user.save()
+    })
+    test('succesfully creating a valid user', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'kovaukko',
+        name: 'Kova Ukko',
+        password: 'salainen',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+
+      const usernames = usersAtEnd.map(u => u.username)
+      assert(usernames.includes(newUser.username))
+    })
+
+    test('trying to create user with non-unique username', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'Kova Ukko',
+        password: 'salainen',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('trying to create user with too short username', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'ku',
+        name: 'Kova Ukko',
+        password: 'salainen',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('trying to create user with no password', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'kovaukko',
+        name: 'Kova Ukko'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('trying to create user with a too short password', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'kovaukko',
+        name: 'Kova Ukko',
+        password: 'lo'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
   })
 })

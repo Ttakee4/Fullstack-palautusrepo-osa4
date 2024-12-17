@@ -1,9 +1,11 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhanV1a2tvIiwiaWQiOiI2NzYxYTY1NmFiZTllNzc1YzFjY2FkMWIiLCJpYXQiOjE3MzQ0NTQzNjN9._6pP--jVP2TsQZ9-zfEJKZcCDVLZj0ZkSgnlS1ceyGk
 
 {
-	"title": "Kova Hommat",
-	"author": "Kova Ukko",
-	"url": "www.kovaahommaa.fi",
-	"likes": 66428
+	"title": "Rajuja ruokapaikkoja",
+	"author": "Raju Ukko",
+	"url": "www.ruokaa.fi",
+	"userId": "6761a656abe9e775c1ccad1b",
+	"likes": 64
 }
